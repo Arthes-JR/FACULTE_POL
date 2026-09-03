@@ -43,6 +43,39 @@ class DatabaseManager:
             self.connection.rollback()
             return None
     
+    def create_database(self):
+        """Créer la base de données si elle n'existe pas"""
+        try:
+            db_name = os.getenv('DB_NAME', 'gestion_faculte')
+            
+            # Se connecter à la base 'postgres' par défaut
+            conn = psycopg2.connect(
+                host=os.getenv('DB_HOST', 'localhost'),
+                database='postgres',
+                user=os.getenv('DB_USER', 'postgres'),
+                password=os.getenv('DB_PASSWORD', 'postgres'),
+                port=os.getenv('DB_PORT', '5432')
+            )
+            conn.autocommit = True
+            cursor = conn.cursor()
+            
+            # Vérifier si la base existe
+            cursor.execute(f"SELECT 1 FROM pg_database WHERE datname = '{db_name}'")
+            exists = cursor.fetchone()
+            
+            if not exists:
+                cursor.execute(f"CREATE DATABASE {db_name}")
+                print(f"✅ Base de données '{db_name}' créée")
+            else:
+                print(f"✅ Base de données '{db_name}' existe déjà")
+            
+            cursor.close()
+            conn.close()
+            return True
+        except Exception as e:
+            print(f"❌ Erreur création base: {e}")
+            return False
+    
     def create_tables(self):
         tables = [
             """

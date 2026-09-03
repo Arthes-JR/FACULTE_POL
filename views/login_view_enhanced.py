@@ -1,13 +1,11 @@
 """
 Interface de connexion - Version Améliorée
 Système de Gestion de Faculté - UNIKIN
-Ajouts : Animations, effets visuels, design modernisé
 """
 
 import tkinter as tk
 from tkinter import ttk, messagebox
 from controllers.auth_controller import AuthController
-import time
 
 class LoginViewEnhanced:
     """Fenêtre de connexion avec animations et design amélioré"""
@@ -24,9 +22,9 @@ class LoginViewEnhanced:
         # Variables pour les animations
         self.is_loading = False
         self.animation_after_id = None
+        self.show_pass = False
         
         self.setup_ui()
-        self.setup_animations()
 
     def setup_ui(self):
         """Configurer l'interface utilisateur améliorée"""
@@ -35,19 +33,15 @@ class LoginViewEnhanced:
         main_container = tk.Frame(self.root, bg='white', relief=tk.RAISED, bd=2)
         main_container.place(relx=0.5, rely=0.5, anchor='center', width=900, height=540)
 
-        # ========== PARTIE GAUCHE - BANNIÈRE AVEC DÉCORATION ==========
+        # ========== PARTIE GAUCHE - BANNIÈRE ==========
         left_panel = tk.Frame(main_container, bg='#1a237e', width=350, height=540)
         left_panel.pack(side=tk.LEFT, fill=tk.BOTH)
         left_panel.pack_propagate(False)
 
-        # Décoration : lignes diagonales en fond
-        self.create_decorative_lines(left_panel)
-
-        # Logo avec effet de brillance
+        # Logo
         logo_frame = tk.Frame(left_panel, bg='#1a237e')
         logo_frame.pack(pady=(50, 5))
 
-        # Icône avec cercle de fond
         icon_bg = tk.Canvas(logo_frame, width=80, height=80, bg='#1a237e', highlightthickness=0)
         icon_bg.pack()
         icon_bg.create_oval(10, 10, 70, 70, fill='#3949ab', outline='')
@@ -69,14 +63,13 @@ class LoginViewEnhanced:
             fg='#9fa8da'
         ).pack()
 
-        # Séparateur décoratif
+        # Séparateur
         sep_frame = tk.Frame(left_panel, bg='#1a237e')
         sep_frame.pack(pady=15)
         tk.Frame(sep_frame, bg='#3949ab', width=60, height=2).pack(side=tk.LEFT)
         tk.Frame(sep_frame, bg='#ffd54f', width=30, height=2).pack(side=tk.LEFT, padx=5)
         tk.Frame(sep_frame, bg='#3949ab', width=60, height=2).pack(side=tk.LEFT)
 
-        # Titre du système
         tk.Label(
             left_panel,
             text="Système de Gestion\nIntégré des Facultés",
@@ -86,16 +79,14 @@ class LoginViewEnhanced:
             justify=tk.CENTER
         ).pack(pady=10)
 
-        # Sous-titre avec effet
         tk.Label(
             left_panel,
-            text="⚡ Version 3.0 - Premium",
+            text="Version 3.0 - Premium",
             font=("Segoe UI", 10),
             bg='#1a237e',
             fg='#7986cb'
         ).pack()
 
-        # Badge de version
         version_badge = tk.Label(
             left_panel,
             text="LMD",
@@ -107,16 +98,15 @@ class LoginViewEnhanced:
         )
         version_badge.pack(pady=(30, 0))
 
-        # ========== PARTIE DROITE - FORMULAIRE AMÉLIORÉ ==========
+        # ========== PARTIE DROITE - FORMULAIRE ==========
         right_panel = tk.Frame(main_container, bg='white', width=550, height=540)
         right_panel.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
         right_panel.pack_propagate(False)
 
-        # En-tête du formulaire
+        # En-tête
         header_frame = tk.Frame(right_panel, bg='white')
         header_frame.pack(fill=tk.X, padx=45, pady=(35, 5))
 
-        # Icône de bienvenue
         tk.Label(
             header_frame,
             text="👋",
@@ -144,13 +134,13 @@ class LoginViewEnhanced:
         form_frame = tk.Frame(right_panel, bg='white')
         form_frame.pack(fill=tk.X, padx=45, pady=5)
 
-        # === Champ Email avec icône ===
+        # Email
         email_container = tk.Frame(form_frame, bg='white')
         email_container.pack(fill=tk.X, pady=(0, 12))
 
         tk.Label(
             email_container,
-            text="📧 Adresse email",
+            text="Adresse email",
             font=("Segoe UI", 10, "bold"),
             fg='#333333',
             bg='white'
@@ -168,22 +158,19 @@ class LoginViewEnhanced:
         )
         self.email_entry.pack(fill=tk.X, pady=(4, 0), ipady=10)
         self.email_entry.insert(0, "doyen.fd@unikin.com")
-        self.email_entry.bind('<FocusIn>', lambda e: self.on_focus_in(self.email_entry))
-        self.email_entry.bind('<FocusOut>', lambda e: self.on_focus_out(self.email_entry))
 
-        # === Champ Mot de passe avec icône ===
+        # Mot de passe
         password_container = tk.Frame(form_frame, bg='white')
         password_container.pack(fill=tk.X, pady=(0, 12))
 
         tk.Label(
             password_container,
-            text="🔒 Mot de passe",
+            text="Mot de passe",
             font=("Segoe UI", 10, "bold"),
             fg='#333333',
             bg='white'
         ).pack(anchor='w')
 
-        # Frame pour le mot de passe avec affichage toggle
         pass_frame = tk.Frame(password_container, bg='#f5f7fa', bd=2, relief=tk.FLAT)
         pass_frame.pack(fill=tk.X, pady=(4, 0))
 
@@ -198,8 +185,6 @@ class LoginViewEnhanced:
         self.password_entry.pack(side=tk.LEFT, fill=tk.X, expand=True, ipady=10, padx=10)
         self.password_entry.insert(0, "password")
 
-        # Bouton pour afficher/masquer le mot de passe
-        self.show_pass = False
         self.toggle_btn = tk.Label(
             pass_frame,
             text="👁️",
@@ -210,13 +195,13 @@ class LoginViewEnhanced:
         self.toggle_btn.pack(side=tk.RIGHT, padx=10)
         self.toggle_btn.bind('<Button-1>', self.toggle_password)
 
-        # === Sélection du rôle avec design amélioré ===
+        # Rôle
         role_container = tk.Frame(form_frame, bg='white')
         role_container.pack(fill=tk.X, pady=(0, 15))
 
         tk.Label(
             role_container,
-            text="👤 Sélectionnez votre rôle",
+            text="Sélectionnez votre rôle",
             font=("Segoe UI", 10, "bold"),
             fg='#333333',
             bg='white'
@@ -226,6 +211,7 @@ class LoginViewEnhanced:
         role_frame = tk.Frame(role_container, bg='white')
         role_frame.pack(fill=tk.X, pady=(6, 0))
 
+        # CORRECTION : Suppression de selectfrom=0
         roles = [
             ("👑 Doyen", "Doyen"),
             ("🎓 Professeur", "Professeur"),
@@ -233,7 +219,7 @@ class LoginViewEnhanced:
             ("📋 Secrétaire", "Secrétaire")
         ]
 
-        for i, (display, value) in enumerate(roles):
+        for display, value in roles:
             rb = tk.Radiobutton(
                 role_frame,
                 text=display,
@@ -244,15 +230,11 @@ class LoginViewEnhanced:
                 fg='#333333',
                 selectcolor='#e8eaf6',
                 activebackground='white',
-                cursor='hand2',
-                indicatoron=False,
-                selectfrom=0
+                cursor='hand2'
             )
             rb.pack(side=tk.LEFT, padx=(0, 12), ipadx=8, ipady=4)
-            rb.bind('<Enter>', lambda e, b=rb: b.config(bg='#e8eaf6'))
-            rb.bind('<Leave>', lambda e, b=rb: b.config(bg='white'))
 
-        # Message d'erreur avec animation
+        # Message d'erreur
         self.error_label = tk.Label(
             form_frame,
             text="",
@@ -262,14 +244,14 @@ class LoginViewEnhanced:
         )
         self.error_label.pack(pady=5)
 
-        # === Bouton de connexion amélioré ===
+        # Bouton de connexion
         btn_container = tk.Frame(form_frame, bg='white')
         btn_container.pack(fill=tk.X, pady=(5, 0))
 
         self.login_btn = tk.Button(
             btn_container,
             text="🔑 Se connecter",
-            command=self.login_with_animation,
+            command=self.login,
             font=("Segoe UI", 12, "bold"),
             bg='#1a237e',
             fg='white',
@@ -279,24 +261,6 @@ class LoginViewEnhanced:
             activeforeground='white'
         )
         self.login_btn.pack(fill=tk.X, ipady=12)
-
-        # Effet de survol avec transition de couleur
-        self.login_btn.bind('<Enter>', self.on_btn_enter)
-        self.login_btn.bind('<Leave>', self.on_btn_leave)
-
-        # === Lien "Mot de passe oublié" ===
-        link_frame = tk.Frame(form_frame, bg='white')
-        link_frame.pack(fill=tk.X, pady=(8, 0))
-
-        tk.Label(
-            link_frame,
-            text="Mot de passe oublié ?",
-            font=("Segoe UI", 9),
-            fg='#1a237e',
-            bg='white',
-            cursor='hand2'
-        ).pack(side=tk.RIGHT)
-        # (Le lien peut être configuré plus tard)
 
         # Pied de page
         footer = tk.Frame(right_panel, bg='white')
@@ -313,44 +277,7 @@ class LoginViewEnhanced:
         ).pack(pady=(10, 0))
 
         # Raccourci Enter
-        self.root.bind('<Return>', lambda e: self.login_with_animation())
-
-    def create_decorative_lines(self, parent):
-        """Créer des lignes décoratives sur le panneau gauche"""
-        canvas = tk.Canvas(parent, bg='#1a237e', highlightthickness=0)
-        canvas.place(x=0, y=0, width=350, height=540)
-
-        # Lignes diagonales décoratives
-        for i in range(0, 600, 40):
-            canvas.create_line(
-                -i, 0,
-                0, i,
-                fill='#283593',
-                width=1,
-                dash=(5, 5)
-            )
-        
-        # Cercle décoratif
-        canvas.create_oval(250, 450, 350, 540, fill='#283593', outline='')
-
-    def setup_animations(self):
-        """Configurer les animations"""
-        # Animation de l'icône de chargement
-        self.loading_dots = 0
-
-    def on_focus_in(self, entry):
-        """Effet de focus sur le champ"""
-        if entry.get() == "doyen.fd@unikin.com":
-            entry.delete(0, tk.END)
-            entry.config(fg='#1a237e')
-        entry.config(bg='white')
-
-    def on_focus_out(self, entry):
-        """Effet de perte de focus"""
-        if entry.get() == "":
-            entry.insert(0, "doyen.fd@unikin.com")
-            entry.config(fg='#999999')
-        entry.config(bg='#f5f7fa')
+        self.root.bind('<Return>', lambda e: self.login())
 
     def toggle_password(self, event):
         """Afficher/masquer le mot de passe"""
@@ -362,90 +289,37 @@ class LoginViewEnhanced:
             self.password_entry.config(show='●')
             self.toggle_btn.config(text='👁️')
 
-    def on_btn_enter(self, event):
-        """Effet de survol du bouton"""
-        self.login_btn.config(
-            bg='#0d1a5e',
-            font=("Segoe UI", 12, "bold"),
-            padx=10
-        )
-
-    def on_btn_leave(self, event):
-        """Effet de sortie du bouton"""
-        if not self.is_loading:
-            self.login_btn.config(
-                bg='#1a237e',
-                font=("Segoe UI", 12, "bold")
-            )
-
-    def animate_loading(self):
-        """Animation de chargement"""
-        if self.is_loading:
-            dots = ["", "•", "••", "•••"]
-            self.login_btn.config(text=f"Connexion{dots[self.loading_dots]}")
-            self.loading_dots = (self.loading_dots + 1) % 4
-            self.animation_after_id = self.root.after(300, self.animate_loading)
-
-    def login_with_animation(self):
-        """Connexion avec animation"""
-        if self.is_loading:
-            return
-
+    def login(self):
+        """Gérer la connexion - CORRIGÉ"""
         email = self.email_entry.get().strip()
         password = self.password_entry.get().strip()
         role = self.role_var.get()
 
-        if not email or email in ["doyen.fd@unikin.com", ""]:
-            self.show_error("⚠️ Veuillez saisir votre adresse email")
+        print(f"\n🔍 Tentative de connexion avec: {email}, rôle: {role}")
+
+        if not email:
+            self.error_label.config(text="⚠️ Veuillez saisir votre adresse email")
             return
 
         if not password:
-            self.show_error("⚠️ Veuillez saisir votre mot de passe")
+            self.error_label.config(text="⚠️ Veuillez saisir votre mot de passe")
             return
 
-        # Démarrer l'animation
-        self.is_loading = True
-        self.loading_dots = 0
-        self.login_btn.config(state=tk.DISABLED)
-        self.error_label.config(text="")
-        self.animate_loading()
-
-        # Simuler la connexion
-        self.root.after(500, lambda: self.perform_login(email, password, role))
-
-    def perform_login(self, email, password, role):
-        """Effectuer la connexion réelle"""
         try:
             user = self.auth_controller.authenticate(email, password, role)
-            
-            # Arrêter l'animation
-            self.is_loading = False
-            if self.animation_after_id:
-                self.root.after_cancel(self.animation_after_id)
-            self.login_btn.config(text="🔑 Se connecter", state=tk.NORMAL)
-            self.on_btn_leave(None)
-
             if user:
-                # CORRECTION : Sauvegarder la référence avant de détruire
+                print(f"✅ Connexion réussie pour {email}")
+                # Sauvegarder la référence avant de détruire
                 on_success = self.on_login_success
-                if self.root.winfo_exists():
-                    self.root.destroy()
-                    on_success(user, role)
-                else:
-                    print("⚠️ La fenêtre a déjà été détruite")
+                self.root.destroy()
+                on_success(user, role)
             else:
-                self.show_error("❌ Email, mot de passe ou rôle incorrect")
-
+                self.error_label.config(text="❌ Email, mot de passe ou rôle incorrect")
+                print(f"❌ Échec de connexion pour {email}")
         except Exception as e:
-            self.is_loading = False
-            self.login_btn.config(text="🔑 Se connecter", state=tk.NORMAL)
-            self.show_error(f"❌ Erreur: {str(e)}")
-
-    def show_error(self, message):
-        """Afficher un message d'erreur avec animation"""
-        self.error_label.config(text=message)
-        # Animation de vibration
-        for i in range(3):
-            self.root.after(i * 50, lambda: self.error_label.config(fg='#d32f2f'))
-            self.root.after(i * 50 + 25, lambda: self.error_label.config(fg='#ff1744'))
-        self.root.after(150, lambda: self.error_label.config(fg='#d32f2f'))
+            # Vérifier que la fenêtre existe avant de modifier l'erreur
+            try:
+                self.error_label.config(text=f"❌ Erreur: {str(e)}")
+            except:
+                pass
+            print(f"❌ Erreur: {e}")
